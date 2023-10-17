@@ -1,5 +1,21 @@
 # InferyLLM
-Inference engine and server for LLMs
+An inference engine and server for LLMs by Deci.<br>
+With Infery-LLM, you can supercharge the performance of your LLMs, boosting speed by up to 5x while maintaining the same accuracy.  
+Unprecedented inference efficiency emerges when combining Deci’s open-source models such as DeciCoder or DeciLM 6B and Infery-LLM. Furthermore, Infery-LLM allows you to run larger models on more widely available and cost-effective GPUs by supporting different parallelism paradigms.<br>
+Check out this [blog post](https://deci.ai/blog/decilm-15-times-faster-than-llama2-nas-generated-llm-with-variable-gqa/) for more details.
+
+## Requirements
+1. Cuda driver 12.2 [download](https://developer.nvidia.com/cuda-downloads)
+2. nvidia-docker-runtime [link](https://developer.nvidia.com/nvidia-container-runtime)
+3. Python 3.11 [download](https://www.python.org/downloads/release/python-3110/)
+4. Supported Models:
+   * [DeciLM 6B](https://huggingface.co/Deci/DeciLM-6b)
+   * [DeciLM 6B instruct](https://huggingface.co/Deci/DeciLM-6b-instruct)
+   * [DeciCoder 1B](https://huggingface.co/Deci/DeciCoder-1b)
+6. Supported GPUs: Compute capability >= 8.0 (e.g. A100, A10, L4, ...)<br>
+   * Memory requirements depends on the model size.
+        * DeciLM-6B - at least 24G (preferably 32G). 
+        * DeciCoder-1B - 16G is more than enough.
 
 ## Installation
 To install the InferyLLM package you must get artifactory credentials from Deci:
@@ -61,5 +77,5 @@ result = client.generate(["Write a short story about a dragon who was hungry:", 
 You may also submit a request using curl:
 
 ``` shell
-curl -X POST http://address:port/generate -H 'Content-Type: application/json' -d '{"prompts":["Write a short story about a dragon who was hungry:"],"max_new_tokens": 10}'
+curl -X POST http://address:port/generate -H 'Content-Type: application/json' -d '{"prompts":["Write a short story about a dragon who was hungry:"],"max_new_tokens": 15}'
 ```
