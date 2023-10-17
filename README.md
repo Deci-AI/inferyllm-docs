@@ -1,6 +1,12 @@
 # InferyLLM
 Inference engine and server for LLMs
 
+## Requirements
+1. Cuda driver 12.2 [download](https://developer.nvidia.com/cuda-downloads)
+2. Python 3.11 [download](https://www.python.org/downloads/release/python-3110/)
+3. Supported GPUs: NVIDIA A100, NVIDIA A10
+    3.1: Memory: for optimal performance, should be at least 24G (preferably 32G)
+
 ## Installation
 To install the InferyLLM package you must get artifactory credentials from Deci:
 ### Client
@@ -61,5 +67,5 @@ result = client.generate(["Write a short story about a dragon who was hungry:", 
 You may also submit a request using curl:
 
 ``` shell
-curl -X POST http://address:port/generate -H 'Content-Type: application/json' -d '{"prompts":["Write a short story about a dragon who was hungry:"],"max_new_tokens": 10}'
+curl -X POST http://address:port/generate -H 'Content-Type: application/json' -d '{"prompts":["Write a short story about a dragon who was hungry:"],"max_new_tokens": 15}'
 ```
