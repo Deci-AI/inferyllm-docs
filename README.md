@@ -3,9 +3,12 @@ Inference engine and server for LLMs
 
 ## Requirements
 1. Cuda driver 12.2 [download](https://developer.nvidia.com/cuda-downloads)
-2. Python 3.11 [download](https://www.python.org/downloads/release/python-3110/)
-3. Supported GPUs: NVIDIA A100, NVIDIA A10 <br>
-    3.1: Memory: for optimal performance, should be at least 24G (preferably 32G)
+2. nvidia-docker-runtime [link](https://developer.nvidia.com/nvidia-container-runtime)
+3. Python 3.11 [download](https://www.python.org/downloads/release/python-3110/)
+4. Supported GPUs: Compute capability >= 8.0 (e.g. A100, A10, L4, ...)<br>
+    * Memory requirements depends on the model size.
+        * DeciLM-6B - at least 24G (preferably 32G). 
+        * DeciCoder-1B - 16G is more than enough.
 
 ## Installation
 To install the InferyLLM package you must get artifactory credentials from Deci:
