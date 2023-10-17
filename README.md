@@ -1,5 +1,8 @@
 # InferyLLM
-Inference engine and server for LLMs
+An inference engine and server for LLMs by Deci.<br>
+With Infery-LLM, you can supercharge the performance of your LLMs, boosting speed by up to 5x while maintaining the same accuracy.  
+Unprecedented inference efficiency emerges when combining Deci’s open-source models such as DeciCoder or DeciLM 6B and Infery-LLM. Furthermore, Infery-LLM allows you to run larger models on more widely available and cost-effective GPUs by supporting different parallelism paradigms.<br>
+Check out this [blog post](https://deci.ai/blog/decilm-15-times-faster-than-llama2-nas-generated-llm-with-variable-gqa/) for more details.
 
 ## Requirements
 1. Cuda driver 12.2 [download](https://developer.nvidia.com/cuda-downloads)
