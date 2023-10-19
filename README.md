@@ -72,27 +72,30 @@ docker run --runtime=nvidia infery-llm:0.0.2 --model-name Deci/DeciLM-6b --port 
 ```
 
 ### Generation
-Assuming you have a running server listening at `address:port`, you may submit generation requests to it like so:
+Assuming you have a running server listening at `127.0.0.1:9000`, you may submit generation requests to it like so:
 
 ```python
 from infery_llm.client import LLMClient
 
-client = LLMClient("http://address:port")
+client = LLMClient("http://127.0.0.1:9000")
 
 # set generation params (max_new_tokens, temperature, etc...)
 gen_params = GenerationParams(max_new_tokens=100, top_p=0.95, top_k=0, temperature=0.1, do_sample=True)
 
 # submit a single prompt and query results
-result = client.generate("def hello_world():", generation_params=gen_params)
+result = client.generate("A receipe for making spaghetti: ", generation_params=gen_params)
 print(result.outputs[0])
 
 # submit a batch of prompts
-result = client.generate(["def factorial(n: int) -> int:", "def fib(n: int) -> int:"], generation_params=gen_params)
+result = client.generate(["A receipe for making spaghetti:", "5 interesting facts about the President of France are: "], generation_params=gen_params)
 [print(output) for output in result.outputs]
+
+# use stop tokens
+result = client.generate("A receipe for making spaghetti: ", GenerationParams(do_sample=False, stop_str_tokens=[1524], stop_strs=["add tomatoes"], skip_special_tokens=True))
 ```
 
 You may also submit a request using curl:
 
 ``` shell
-curl -X POST http://address:port/generate -H 'Content-Type: application/json' -d '{"prompts":["Write a short story about a dragon who was hungry:"],"max_new_tokens": 15}'
+curl -X POST http://address:port/generate -H 'Content-Type: application/json' -d '{"prompts":["Write a short story about a dragon who was hungry:"], "max_new_tokens": 15}'
 ```
