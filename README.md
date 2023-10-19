@@ -60,7 +60,7 @@ To pull the InferyLLM docker you must use the same artifactory credentials from 
 ```bash
 docker login --username [USERNAME] --password [PASSWORD] deci.jfrog.io
 
-docker pull docker pull deci.jfrog.io/deci-external-docker-local/infery-llm:0.0.2
+docker pull deci.jfrog.io/deci-external-docker-local/infery-llm:0.0.2
 ```
 
 By default, running the container will start a server on port 0.0.0.0:8080. The container simply enters the "local" 
