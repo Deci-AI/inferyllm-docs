@@ -5,18 +5,17 @@ Unprecedented inference efficiency emerges when combining Deci’s open-source m
 Check out this [blog post](https://deci.ai/blog/decilm-15-times-faster-than-llama2-nas-generated-llm-with-variable-gqa/) for more details.
 
 ## Requirements
-1. Cuda driver 12.2 [download](https://developer.nvidia.com/cuda-downloads)
-2. nvidia-docker-runtime [link](https://developer.nvidia.com/nvidia-container-runtime)
-3. Python 3.11 [download](https://www.python.org/downloads/release/python-3110/)
+1. [CUDA 12.2](https://developer.nvidia.com/cuda-downloads)
+2. [nvidia-docker-runtime](https://developer.nvidia.com/nvidia-container-runtime)
+3. [Python 3.11](https://www.python.org/downloads/release/python-3110/)
 4. Supported Models:
    * [DeciLM 6B](https://huggingface.co/Deci/DeciLM-6b)
    * [DeciLM 6B instruct](https://huggingface.co/Deci/DeciLM-6b-instruct)
    * [DeciCoder 1B](https://huggingface.co/Deci/DeciCoder-1b)
-   * Llama
-   * Coming soon - Falcon, Mistral, MPT
+   * Coming soon - LLaMA, Falcon, Mistral, MPT
 6. Supported GPUs: Compute capability >= 8.0 (e.g. A100, A10, L4, ...)<br>
    * Memory requirements depends on the model size.
-        * DeciLM-6B - at least 24G (preferably 32G). 
+        * DeciLM-6B - at least 24G. 
         * DeciCoder-1B - 16G is more than enough.
     
 ### New features:
@@ -87,11 +86,13 @@ result = client.generate("A receipe for making spaghetti: ", generation_params=g
 print(result.outputs[0])
 
 # submit a batch of prompts
-result = client.generate(["A receipe for making spaghetti:", "5 interesting facts about the President of France are: "], generation_params=gen_params)
+prompts = ["A receipe for making spaghetti: ", "5 interesting facts about the President of France are: ", "Write a short story about a dog named Snoopy: "]
+result = client.generate(prompts, generation_params=gen_params)
 [print(output) for output in result.outputs]
 
 # use stop tokens
-result = client.generate("A receipe for making spaghetti: ", GenerationParams(do_sample=False, stop_str_tokens=[1524], stop_strs=["add tomatoes"], skip_special_tokens=True))
+gen_params = GenerationParams(do_sample=False, stop_str_tokens=[1524], stop_strs=["add tomatoes"], skip_special_tokens=True)
+result = client.generate("A receipe for making spaghetti: ", generation_params=gen_params)
 ```
 
 You may also submit a request using curl:
