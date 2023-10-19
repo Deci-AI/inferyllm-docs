@@ -12,11 +12,25 @@ Check out this [blog post](https://deci.ai/blog/decilm-15-times-faster-than-llam
    * [DeciLM 6B](https://huggingface.co/Deci/DeciLM-6b)
    * [DeciLM 6B instruct](https://huggingface.co/Deci/DeciLM-6b-instruct)
    * [DeciCoder 1B](https://huggingface.co/Deci/DeciCoder-1b)
+   * Llama
+   * Coming soon - Falcon, Mistral, MPT
 6. Supported GPUs: Compute capability >= 8.0 (e.g. A100, A10, L4, ...)<br>
    * Memory requirements depends on the model size.
         * DeciLM-6B - at least 24G (preferably 32G). 
         * DeciCoder-1B - 16G is more than enough.
+    
+### New features:
+- Support for sampling params ✅
+- Support for stop string and stop tokens list ✅
+- Support for FP16 ✅
 
+### Backlog:
+- Streaming tokens
+- Advanced sampling techniques (beam search and others)
+- Support for more models (MPT, Mistral, Falcon)
+- More performance optimization and tuning
+
+  
 ## Installation
 To install the InferyLLM package you must get artifactory credentials from Deci:
 ### Client
@@ -65,12 +79,15 @@ from infery_llm.client import LLMClient
 
 client = LLMClient("http://address:port")
 
-# submit a single prompt
-result = client.generate("Write a short story about a dragon who was hungry:", max_new_tokens=10)
+# set generation params (max_new_tokens, temperature, etc...)
+gen_params = GenerationParams(max_new_tokens=100, top_p=0.95, top_k=0, temperature=0.1, do_sample=True)
+
+# submit a single prompt and query results
+result = client.generate("def hello_world():", generation_params=gen_params)
 print(result.outputs[0])
 
 # submit a batch of prompts
-result = client.generate(["Write a short story about a dragon who was hungry:", "5 important facts about the prime minister of France are:"], max_new_tokens=10)
+result = client.generate(["def factorial(n: int) -> int:", "def fib(n: int) -> int:"], generation_params=gen_params)
 [print(output) for output in result.outputs]
 ```
 
