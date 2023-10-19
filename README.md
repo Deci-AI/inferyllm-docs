@@ -68,7 +68,7 @@ By default, running the container will start a server on port 0.0.0.0:8080. The 
 entrypoint, thus you may pass the same exact arguments to it.
 
 ```bash
-docker run --runtime=nvidia infery-llm:0.0.1 --model-name Deci/DeciLM-6b --port 9000
+docker run --runtime=nvidia infery-llm:0.0.2 --model-name Deci/DeciLM-6b --port 9000
 ```
 
 ### Generation
