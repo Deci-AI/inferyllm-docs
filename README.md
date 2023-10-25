@@ -74,7 +74,7 @@ docker run --runtime=nvidia deci.jfrog.io/deci-external-docker-local/infery-llm:
 Assuming you have a running server listening at `127.0.0.1:9000`, you may submit generation requests to it like so:
 
 ```python
-from infery_llm.client import LLMClient
+from infery_llm.client import LLMClient, GenerationParams
 
 client = LLMClient("http://127.0.0.1:9000")
 
