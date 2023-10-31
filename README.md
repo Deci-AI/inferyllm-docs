@@ -8,10 +8,12 @@ Check out this [blog post](https://deci.ai/blog/decilm-15-times-faster-than-llam
 1. [CUDA 12.2](https://developer.nvidia.com/cuda-downloads)
 2. [nvidia-docker-runtime](https://developer.nvidia.com/nvidia-container-runtime)
 3. [Python 3.11](https://www.python.org/downloads/release/python-3110/)
-4. Supported Models:
+4. If you want to run the inference engine via sdk (as opposed to docker container), you will need also CMake>=3.24.4 <br>For Ubuntu with older versions, [here](https://askubuntu.com/questions/355565/how-do-i-install-the-latest-version-of-cmake-from-the-command-line) is a guide for doing this.
+5. Supported Models:
    * [DeciLM 6B](https://huggingface.co/Deci/DeciLM-6b)
    * [DeciLM 6B instruct](https://huggingface.co/Deci/DeciLM-6b-instruct)
    * [DeciCoder 1B](https://huggingface.co/Deci/DeciCoder-1b)
+   * Fine-tuned versions of the models above.
    * Coming soon - LLaMA, Falcon, Mistral, MPT
 6. Supported GPUs: Compute capability >= 8.0 (e.g. A100, A10, L4, ...)<br>
    * Memory requirements depends on the model size.
@@ -69,6 +71,8 @@ entrypoint, thus you may pass the same exact arguments to it.
 ```bash
 docker run --runtime=nvidia deci.jfrog.io/deci-external-docker-local/infery-llm:0.0.2 --model-name Deci/DeciLM-6b --port 9000
 ```
+### Running a fine-tuned model
+TODO
 
 ### Generation
 Assuming you have a running server listening at `127.0.0.1:9000`, you may submit generation requests to it like so:
