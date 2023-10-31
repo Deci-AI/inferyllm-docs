@@ -143,7 +143,7 @@ caches the `prepare` artifacts in `~/.cache/deci`. It does so for every model se
 This means that relaunching a local or containerized server (if it is the same container, not just the same image) will
 automatically lower the loading time.
 
-### Generation
+## Generation
 Assuming you have a running server listening at `127.0.0.1:9000`, you may submit generation requests to it like so:
 1. Through InferyLLM's `LLMClient`:
 ```python
