@@ -36,7 +36,8 @@ InferyLLM is a high-performance engine and server for running LLM inference.
   
 ## Installation
 ### Prerequisites
-Before you begin, ensure you have met the following system requirements:
+Before you begin, verify you have an artifactory **user** and **token** from Deci.<br> 
+Then, ensure you have met the following system requirements:
 
 - General requirements:
   - Python >= 3.11
