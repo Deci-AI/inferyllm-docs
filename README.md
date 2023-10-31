@@ -69,7 +69,7 @@ By default, running the container will start a server on port 0.0.0.0:8080. The 
 entrypoint, thus you may pass the same exact arguments to it.
 
 ```bash
-docker run --runtime=nvidia deci.jfrog.io/deci-external-docker-local/infery-llm:0.0.2 --model-name Deci/DeciLM-6b --port 9000
+docker run -p 9000:9000 --runtime=nvidia deci.jfrog.io/deci-external-docker-local/infery-llm:0.0.2 --model-name Deci/DeciLM-6b --port 9000
 ```
 ### Running a fine-tuned model
 TODO
