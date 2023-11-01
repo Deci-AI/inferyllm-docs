@@ -26,6 +26,7 @@ InferyLLM is a high-performance engine and server for running LLM inference.
    * [DeciLM 6B](https://huggingface.co/Deci/DeciLM-6b)
    * [DeciLM 6B instruct](https://huggingface.co/Deci/DeciLM-6b-instruct)
    * [DeciCoder 1B](https://huggingface.co/Deci/DeciCoder-1b)
+   * Fine-tuned variants of the above.
    * Other models coming soon... (LLaMA variants, Falcon, Mistral, MPT)
 
 ### Supported GPUs
