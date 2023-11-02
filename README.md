@@ -72,7 +72,7 @@ To pull an InferyLLM container from Deci's container registry:
 docker login --username [ARTIFACTORY USER] --password [ARTIFACTORY TOKEN] deci.jfrog.io
 
 # Pull the container. [VERSION TAG] may be a specific version (e.g. 0.0.3) or "latest"
-docker pull docker pull deci.jfrog.io/deci-external-docker-local/infery-llm:[VERSION TAG]
+docker pull deci.jfrog.io/deci-external-docker-local/infery-llm:[VERSION TAG]
 ```
 
 ## Serving
