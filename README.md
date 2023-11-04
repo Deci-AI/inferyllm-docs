@@ -154,7 +154,7 @@ from infery_llm.client import LLMClient, GenerationParams
 client = LLMClient("http://127.0.0.1:9000")
 
 # set generation params (max_new_tokens, temperature, etc...)
-gen_params = GenerationParams(max_new_tokens=100, top_p=0.95, top_k=0, temperature=0.1, do_sample=True)
+gen_params = GenerationParams(max_new_tokens=100, top_p=0.95, top_k=0, temperature=0.1)
 
 # submit a single prompt and query results
 result = client.generate("A receipe for making spaghetti: ", generation_params=gen_params)
@@ -166,7 +166,7 @@ result = client.generate(prompts, generation_params=gen_params)
 [print(output) for output in result.outputs]
 
 # use stop tokens
-gen_params = GenerationParams(do_sample=False, stop_str_tokens=[1524], stop_strs=["add tomatoes"], skip_special_tokens=True)
+gen_params = GenerationParams(stop_str_tokens=[1524], stop_strs=["add tomatoes"], skip_special_tokens=True)
 result = client.generate("A receipe for making spaghetti: ", generation_params=gen_params)
 ```
 2. Through a `curl` command (assuming you have [cURL](https://curl.se/) installed)
