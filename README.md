@@ -26,8 +26,9 @@ InferyLLM is a high-performance engine and server for running LLM inference.
    * [DeciLM 6B](https://huggingface.co/Deci/DeciLM-6b)
    * [DeciLM 6B instruct](https://huggingface.co/Deci/DeciLM-6b-instruct)
    * [DeciCoder 1B](https://huggingface.co/Deci/DeciCoder-1b)
-   * Fine-tuned variants of the above.
-   * Other models coming soon... (LLaMA variants, Falcon, Mistral, MPT)
+   * [Llama 2 models](https://huggingface.co/docs/transformers/model_doc/llama2)
+   * All fine-tuned variants of the above.
+   * Other models coming soon... (Falcon, Mistral, MPT)
 
 ### Supported GPUs
 * Compute capability >= 8.0 (e.g. A100, A10, L4, ...)<br>
@@ -168,6 +169,13 @@ result = client.generate(prompts, generation_params=gen_params)
 # use stop tokens
 gen_params = GenerationParams(stop_str_tokens=[1524], stop_strs=["add tomatoes"], skip_special_tokens=True)
 result = client.generate("A receipe for making spaghetti: ", generation_params=gen_params)
+
+# stream results
+for text in client.generate("Will the real Slim Shady please ", generation_params=gen_params, stream=True):
+    print(text, end="")
+    
+# async generation is also supported from within async code:
+result = await client.generate_async("AsyncIO is fun because ", generation_params=gen_params)
 ```
 2. Through a `curl` command (assuming you have [cURL](https://curl.se/) installed)
 ``` bash
