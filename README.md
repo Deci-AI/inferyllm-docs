@@ -208,8 +208,6 @@ infery-llm benchmark --help
 ```
 
 ## Backlog
-
-- Token streaming
 - Advanced sampling techniques (beam search and others)
 - Support for more models (MPT, Mistral, Falcon)
 - Further performance optimization and tuning
