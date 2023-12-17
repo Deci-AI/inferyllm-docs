@@ -6,7 +6,6 @@
 3. [Serving](#serving)
 4. [Generation](#generation)
 5. [Advanced Usage](#advanced-usage)
-6. [Backlog](#backlog)
 
 ## Introduction
 InferyLLM is a high-performance engine and server for running LLM inference.
