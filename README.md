@@ -27,8 +27,9 @@ InferyLLM is a high-performance engine and server for running LLM inference.
    * [DeciLM 6B instruct](https://huggingface.co/Deci/DeciLM-6b-instruct)
    * [DeciCoder 1B](https://huggingface.co/Deci/DeciCoder-1b)
    * [Llama 2 models](https://huggingface.co/docs/transformers/model_doc/llama2)
+   * [Mistral-7B](https://huggingface.co/mistralai/Mistral-7B-v0.1)
    * All fine-tuned variants of the above.
-   * Other models coming soon... (Falcon, Mistral, MPT)
+   * More models coming soon... (Falcon, MPT, etc)
 
 ### Supported GPUs
 * Compute capability >= 8.0 (e.g. A100, A10, L4, ...)<br>
@@ -52,17 +53,23 @@ Then, ensure you have met the following system requirements:
   - [nvidia-container-runtime >= 1.13.4](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/release-notes.html)
 
 ### Installing locally
-Using the InferyLLM `LLMClient` requires a very lean installation. For serving locally, an extra installation step is required.
+InferyLLM may be used with a lean (client-only) installation or a full (client+server) installation.
 
+**Client Installation**
+```bash
+# Install InferyLLM (along with LLMClient)
+pip install --extra-index-url=https://[ARTIFACTORY USER]:[ARTIFACTORY TOKEN]@deci.jfrog.io/artifactory/api/pypi/deciExternal/simple infery-llm
+```
+**Client & Server Installation**
 ```bash
 # Install InferyLLM (along with LLMClient)
 pip install --extra-index-url=https://[ARTIFACTORY USER]:[ARTIFACTORY TOKEN]@deci.jfrog.io/artifactory/api/pypi/deciExternal/simple infery-llm
 
-# Now, for local serving install the additional requirements (you may export DECI_ARTIFACTORY_USER and DECI_ARTIFACTORY_TOKEN env vars instead of passing them)
-infery-llm install --subpackage server --user [ARTIFACTORY USER] --token [ARTIFACTORY TOKEN]
+# Install server requirements (you may export DECI_ARTIFACTORY_USER and DECI_ARTIFACTORY_TOKEN env vars instead of passing them)
+infery-llm install -s server --user [ARTIFACTORY USER] --token [ARTIFACTORY TOKEN]
 ```
 
-For a more thorough explanation, please refer to the [Advanced Usage](#advanced-usage)
+For a more thorough explanation, please refer to the [Advanced Usage](#advanced-usage) and check out the `install` CLI command.
 
 ### Pulling the InferyLLM container
 
@@ -72,8 +79,8 @@ To pull an InferyLLM container from Deci's container registry:
 # Log in to Deci's container registry
 docker login --username [ARTIFACTORY USER] --password [ARTIFACTORY TOKEN] deci.jfrog.io
 
-# Pull the container. [VERSION TAG] may be a specific version (e.g. 0.0.3) or "latest"
-docker pull deci.jfrog.io/deci-external-docker-local/infery-llm:[VERSION TAG]
+# Pull the container. You may be specify a version instead of "latest" (e.g. 0.0.5)
+docker pull deci.jfrog.io/deci-external-docker-local/infery-llm:latest
 ```
 
 ## Serving
@@ -82,7 +89,7 @@ There are two ways to serve an LLM with InferyLLM:
 1. Through a local entrypoint
 2. By using the InferyLLM container
 
-**It is highly advised to serve using the container rather than the local entrypoint**
+By default, InferyLLM serves at `0.0.0.0:8080` this is configurable through passing the `--host` and `--port` flags.       
 
 ### Serving with a container
 
@@ -111,45 +118,11 @@ infery-llm serve --model-name Deci/DeciLM-6b --port 9000
 infery-llm serve --help
 ```
 
-### Lowering loading time
-
-Loading a HuggingFace-format LLM with InferyLLM requires the following procedure:
-1. Downloading the model configuration
-2. Downloading the model weights
-3. Downloading the required tokenizer
-4. Converting the model weights to a format optimized for InferyLLM's kernels
-5. Autotuning the converted model
-
-While this flow is fully automated and encapsulated within the `infery-llm serve` command, you can perform the entire flow
-ahead of time with the `infery-llm prepare` command and pass the created artifact straight to the serving entry point.
-
-For container users:
-```bash
-# Create artifacts for serving a Deci/DeciCoder-1b and place the result in ~ on the host machine
-docker run --rm --entrypoint infery-llm -v ~/:/models --runtime=nvidia deci.jfrog.io/deci-external-docker-local/infery-llm:[VERSION TAG] prepare --hf-model Deci/DeciCoder-1b --output-dir /models/infery_llm_model
-
-# Now serve the created artifact
-docker run --runtime=nvidia -v ~/:/models deci.jfrog.io/deci-external-docker-local/infery-llm:[VERSION TAG] --infery-model-dir /models/infery_llm_model
-```
-
-For local serving users:
-```bash
-# Create artifacts for serving a Deci/DeciCoder-1b and place the result in ~ on the host machine
-infery-llm prepare --hf-model Deci/DeciCoder-1b --output-dir /models/infery_llm_model
-
-# Now serve the created artifact
-infery-llm serve --infery-model-dir /models/infery_llm_model
-```
-
-**Important note on caching:** Just like HuggingFace caches downloaded model weights in `~/.cache/huggingface`, InferyLLM 
-caches the `prepare` artifacts in `~/.cache/deci`. It does so for every model served.
-This means that relaunching a local or containerized server (if it is the same container, not just the same image) will
-automatically lower the loading time.
-
 ## Generation
 Assuming you have a running server listening at `127.0.0.1:9000`, you may submit generation requests to it like so:
 1. Through InferyLLM's `LLMClient`:
 ```python
+import asyncio
 from infery_llm.client import LLMClient, GenerationParams
 
 client = LLMClient("http://127.0.0.1:9000")
@@ -157,33 +130,39 @@ client = LLMClient("http://127.0.0.1:9000")
 # set generation params (max_new_tokens, temperature, etc...)
 gen_params = GenerationParams(max_new_tokens=100, top_p=0.95, top_k=0, temperature=0.1)
 
-# submit a single prompt and query results
-result = client.generate("A receipe for making spaghetti: ", generation_params=gen_params)
-print(result.outputs[0])
+# Submit a single prompt and query results (along with metadata in this case)
+result = client.generate("Large language models are ", generation_params=gen_params, return_metadata=True)
+print(f"Output: {result.output}.\nGenerated Tokens :{result.metadata[0]['generated_token_count']}")
 
-# submit a batch of prompts
+# Submit a batch of prompts
 prompts = ["A receipe for making spaghetti: ", "5 interesting facts about the President of France are: ", "Write a short story about a dog named Snoopy: "]
 result = client.generate(prompts, generation_params=gen_params)
-[print(output) for output in result.outputs]
+[print(f"Prompt: {output['prompt']}\nGeneration: {output['output']}") for output in result.outputs]
 
-# use stop tokens
+# Use stop tokens
 gen_params = GenerationParams(stop_str_tokens=[1524], stop_strs=["add tomatoes"], skip_special_tokens=True)
 result = client.generate("A receipe for making spaghetti: ", generation_params=gen_params)
 
-# stream results
+# Stream results
 for text in client.generate("Will the real Slim Shady please ", generation_params=gen_params, stream=True):
     print(text, end="")
     
-# async generation is also supported from within async code:
-result = await client.generate_async("AsyncIO is fun because ", generation_params=gen_params)
+# Async generation is also supported from within async code:
+async def example():
+    result = await client.generate_async("AsyncIO is fun because ", generation_params=gen_params)
+    print(result.output)
+asyncio.run(example())
 ```
 2. Through a `curl` command (assuming you have [cURL](https://curl.se/) installed)
 ``` bash
-curl -X POST http://127.0.0.1:8080/generate -H 'Content-Type: application/json' \
--d '{"prompts":["def factorial(n: int) -> int:"], "generation_params":{"max_new_tokens": 500, "temperature":0.5, "top_k":50, "top_p":0.8}}'
+curl -X POST http://0.0.0.0:9000/generate \
+-H 'Content-Type: application/json' \
+-d '{"prompts":["def factorial(n: int) -> int:"], "generation_params":{"max_new_tokens": 500, "temperature":0.5, "top_k":50, "top_p":0.8}, "stream":true}'
 ```
 
 ## Advanced Usage
+
+### CLI
 
 InferyLLM and its CLI are rapidly accumulating more features. For example, the `infery-llm` CLI already allows to `benchmark`
 with numerous configurations, to `prepare` model artifacts before serving in order to [cut down loading time](#lowering-loading-time),
@@ -192,13 +171,13 @@ and more. To see the available features you may simply pass `--help` to the `inf
 For container users:
 ```bash
 # Query infery-llm CLI help menu
-docker run --entrypoint infery-llm --runtime=nvidia deci.jfrog.io/deci-external-docker-local/infery-llm:[VERSION TAG] --help
+docker run --entrypoint infery-llm --runtime=nvidia deci.jfrog.io/deci-external-docker-local/infery-llm:latest --help
 
 # Query the infery-llm CLI's `benchmark` subcommand help menu
-docker run --entrypoint infery-llm --runtime=nvidia deci.jfrog.io/deci-external-docker-local/infery-llm:[VERSION TAG] benchmark --help
+docker run --entrypoint infery-llm --runtime=nvidia deci.jfrog.io/deci-external-docker-local/infery-llm:latest benchmark --help
 ```
 
-For local serving users:
+For local installation users:
 ```bash
 # Query infery-llm CLI help menu
 infery-llm --help
@@ -207,7 +186,32 @@ infery-llm --help
 infery-llm benchmark --help
 ```
 
-## Backlog
-- Advanced sampling techniques (beam search and others)
-- Support for more models (MPT, Mistral, Falcon)
-- Further performance optimization and tuning
+### Lowering loading time (the `prepare` command)
+
+InferyLLM has its own internal format and per-model artifact requirements. While the required artifacts are automatically
+generated by the `infery-llm serve` command, you can also generate them ahead of time with the `infery-llm prepare`
+command, thus drastically cutting down server start-time.
+
+For container users:
+```bash
+# Create artifacts for serving a Deci/DeciCoder-1b and place the result in ~ on the host machine
+docker run --rm --entrypoint infery-llm -v ~/:/models --runtime=nvidia deci.jfrog.io/deci-external-docker-local/infery-llm:latest prepare --hf-model Deci/DeciCoder-1b --output-dir /models/infery_llm_model
+
+# Now serve the created artifact (specifically here on port 9000)
+docker run --runtime=nvidia -p 9000:9000 -v ~/:/models deci.jfrog.io/deci-external-docker-local/infery-llm:latest --infery-model-dir /models/infery_llm_model --port 9000
+```
+
+For local installation users:
+```bash
+# Create artifacts for serving a Deci/DeciCoder-1b and place the result in ~ on the host machine
+infery-llm prepare --hf-model Deci/DeciCoder-1b --output-dir /models/infery_llm_model
+
+# Now serve the created artifact (specifically here on port 9000)
+infery-llm serve --infery-model-dir /models/infery_llm_model --port 9000
+```
+
+**Important note on caching:** Just like 🤗 caches downloaded model weights in `~/.cache/huggingface`, InferyLLM 
+caches the mentioned artifacts in `~/.cache/deci`. It does so for every model served.
+This means that relaunching a local or containerized server (if it is the same container, not just the same image) will
+automatically lower the loading time.
+
