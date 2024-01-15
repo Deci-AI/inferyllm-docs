@@ -130,7 +130,7 @@ client = LLMClient("http://127.0.0.1:9000")
 gen_params = GenerationParams(max_new_tokens=100, top_p=0.95, top_k=None, temperature=0.1)
 
 # Submit a single prompt and query results (along with metadata in this case)
-result = client.generate("Write a story about a red cat ", generation_params=gen_params, return_metadata=True)
+result = client.generate("Write a story about a red cat: ", generation_params=gen_params, return_metadata=True)
 print(f"Output: {result.output}.\nGenerated Tokens :{result.metadata[0]['generated_token_count']}")
 
 # Submit a batch of prompts
