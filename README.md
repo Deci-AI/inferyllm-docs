@@ -127,10 +127,10 @@ from infery_llm.client import LLMClient, GenerationParams
 client = LLMClient("http://127.0.0.1:9000")
 
 # set generation params (max_new_tokens, temperature, etc...)
-gen_params = GenerationParams(max_new_tokens=100, top_p=0.95, top_k=0, temperature=0.1)
+gen_params = GenerationParams(max_new_tokens=100, top_p=0.95, top_k=None, temperature=0.1)
 
 # Submit a single prompt and query results (along with metadata in this case)
-result = client.generate("Large language models are ", generation_params=gen_params, return_metadata=True)
+result = client.generate("Write a story about a red cat ", generation_params=gen_params, return_metadata=True)
 print(f"Output: {result.output}.\nGenerated Tokens :{result.metadata[0]['generated_token_count']}")
 
 # Submit a batch of prompts
