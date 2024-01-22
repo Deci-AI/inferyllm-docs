@@ -11,7 +11,7 @@
 InferyLLM is a high-performance engine and server for running LLM inference.
 
 ### InferyLLM is fast
-- Optimized CUDA kernels for MQA and GQA
+- Optimized CUDA kernels for MQA, GQA and MHA
 - Continuous batching using a paged KV cache and custom paged attention kernels 
 - Kernel autotuning capabilities with automatic selection of the optimal kernels and parameters on the given HW
 - Support for extremely efficient LLMs, designed to reach SOTA throughput
@@ -64,8 +64,8 @@ pip install --extra-index-url=https://[ARTIFACTORY USER]:[ARTIFACTORY TOKEN]@dec
 # Install InferyLLM (along with LLMClient)
 pip install --extra-index-url=https://[ARTIFACTORY USER]:[ARTIFACTORY TOKEN]@deci.jfrog.io/artifactory/api/pypi/deciExternal/simple infery-llm
 
-# Install server requirements (you may export DECI_ARTIFACTORY_USER and DECI_ARTIFACTORY_TOKEN env vars instead of passing them)
-infery-llm install -s server --user [ARTIFACTORY USER] --token [ARTIFACTORY TOKEN]
+# Install server requirements
+INFERY_LLM_DECI_TOKEN=[DECI TOKEN] infery-llm install
 ```
 
 For a more thorough explanation, please refer to the [Advanced Usage](#advanced-usage) and check out the `install` CLI command.
@@ -78,7 +78,7 @@ To pull an InferyLLM container from Deci's container registry:
 # Log in to Deci's container registry
 docker login --username [ARTIFACTORY USER] --password [ARTIFACTORY TOKEN] deci.jfrog.io
 
-# Pull the container. You may be specify a version instead of "latest" (e.g. 0.0.5)
+# Pull the container. You may be specify a version instead of "latest" (e.g. 0.0.7)
 docker pull deci.jfrog.io/deci-external-docker-local/infery-llm:latest
 ```
 
@@ -98,10 +98,10 @@ available serving flags and defaults:
 
 ```bash
 # Serve Deci/DeciLM-6b (from HF hub) on port 9000
-docker run --runtime=nvidia -p 9000:9000 deci.jfrog.io/deci-external-docker-local/infery-llm:[VERSION TAG] --model-name Deci/DeciLM-6b --port 9000
+docker run --runtime=nvidia -e INFERY_LLM_DECI_TOKEN=[DECI TOKEN] -p 9000:9000 deci.jfrog.io/deci-external-docker-local/infery-llm:[VERSION TAG] --model-name Deci/DeciLM-6b --port 9000
 
 # See all serving CLI options and defaults
-docker run --rm --runtime=nvidia deci.jfrog.io/deci-external-docker-local/infery-llm:[VERSION TAG] --help
+docker run --rm --runtime=nvidia -e INFERY_LLM_DECI_TOKEN=[DECI TOKEN] deci.jfrog.io/deci-external-docker-local/infery-llm:[VERSION TAG] --help
 ```
 
 Notice that a HuggingFace token may be passed as an environment variable (using the docker `-e` flag) or as a CLI parameter
@@ -197,7 +197,7 @@ For container users:
 docker run --rm --entrypoint infery-llm -v ~/:/models --runtime=nvidia deci.jfrog.io/deci-external-docker-local/infery-llm:latest prepare --hf-model Deci/DeciCoder-1b --output-dir /models/infery_llm_model
 
 # Now serve the created artifact (specifically here on port 9000)
-docker run --runtime=nvidia -p 9000:9000 -v ~/:/models deci.jfrog.io/deci-external-docker-local/infery-llm:latest --infery-model-dir /models/infery_llm_model --port 9000
+docker run --runtime=nvidia -e INFERY_LLM_DECI_TOKEN=[DECI TOKEN] -p 9000:9000 -v ~/:/models deci.jfrog.io/deci-external-docker-local/infery-llm:latest --infery-model-dir /models/infery_llm_model --port 9000
 ```
 
 For local installation users:
