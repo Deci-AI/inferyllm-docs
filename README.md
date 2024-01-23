@@ -22,8 +22,8 @@ InferyLLM is a high-performance engine and server for running LLM inference.
 - Seamless integration with 🤗 model hub
 
 ### Model support
-   * [DeciLM 6B](https://huggingface.co/Deci/DeciLM-6b)
-   * [DeciLM 6B instruct](https://huggingface.co/Deci/DeciLM-6b-instruct)
+   * [DeciLM 6B](https://huggingface.co/Deci/DeciLM-6b) & [DeciLM 6B instruct](https://huggingface.co/Deci/DeciLM-6b-instruct)
+   * [DeciLM 7B](https://huggingface.co/Deci/DeciLM-7b) & [DeciLM 7B instruct](https://huggingface.co/Deci/DeciLM-7b-instruct)
    * [DeciCoder 1B](https://huggingface.co/Deci/DeciCoder-1b)
    * [Llama 2 models](https://huggingface.co/docs/transformers/model_doc/llama2)
    * [Mistral-7B](https://huggingface.co/mistralai/Mistral-7B-v0.1)
@@ -33,7 +33,7 @@ InferyLLM is a high-performance engine and server for running LLM inference.
 ### Supported GPUs
 * Compute capability >= 8.0 (e.g. A100, A10, L4, ...)<br>
 * Memory requirements depends on the model size.
-* DeciLM-6B - at least 24G.
+* DeciLM-7B - at least 24G.
 * DeciCoder-1B - 16G is more than enough.
   
 ## Installation
@@ -97,8 +97,8 @@ running the server is a simple one-liner. You can also use the container to quer
 available serving flags and defaults:
 
 ```bash
-# Serve Deci/DeciLM-6b (from HF hub) on port 9000
-docker run --runtime=nvidia -e INFERY_LLM_DECI_TOKEN=[DECI TOKEN] -p 9000:9000 deci.jfrog.io/deci-external-docker-local/infery-llm:[VERSION TAG] --model-name Deci/DeciLM-6b --port 9000
+# Serve Deci/DeciCoder-1b (from HF hub) on port 9000
+docker run --runtime=nvidia -e INFERY_LLM_DECI_TOKEN=[DECI TOKEN] -p 9000:9000 deci.jfrog.io/deci-external-docker-local/infery-llm:[VERSION TAG] --model-name Deci/DeciCoder-1b --port 9000
 
 # See all serving CLI options and defaults
 docker run --rm --runtime=nvidia -e INFERY_LLM_DECI_TOKEN=[DECI TOKEN] deci.jfrog.io/deci-external-docker-local/infery-llm:[VERSION TAG] --help
@@ -110,8 +110,8 @@ Notice that a HuggingFace token may be passed as an environment variable (using 
 
 Assuming you have installed the `infery-llm` local serving requirements, you may use the InferyLLM CLI as a server entrypoint:
 ```bash
-# Serve Deci/DeciLM-6b (from HF hub) on port 9000
-infery-llm serve --model-name Deci/DeciLM-6b --port 9000
+# Serve Deci/DeciLM-7b (from HF hub) on port 9000
+INFERY_LLM_DECI_TOKEN=[DECI TOKEN] infery-llm serve --model-name Deci/DeciLM-7b --port 9000
 
 # See all serving options
 infery-llm serve --help
