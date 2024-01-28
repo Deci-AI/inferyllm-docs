@@ -38,7 +38,10 @@ InferyLLM is a high-performance engine and server for running LLM inference.
   
 ## Installation
 ### Prerequisites
-Before you begin, verify you have an artifactory **user** and **token** from Deci.<br> 
+Before you begin, in order to use InferyLLM you need some details from Deci.ai:
+1. Artifactory credentials (referred to as ARTIFACTORY USER and ARTIFACTORY TOKEN) in order to *download* and *update* the package in the future.
+2. Authentication token for running the server. This will be referred to as INFERY_LLM_DECI_TOKEN below.
+
 Then, ensure you have met the following system requirements:
 
 - General requirements:
@@ -83,6 +86,7 @@ docker pull deci.jfrog.io/deci-external-docker-local/infery-llm:latest
 ```
 
 ## Serving
+**Note**: remember you need an authentication token to run the server (INFERY_LLM_DECI_TOKEN)
 
 There are two ways to serve an LLM with InferyLLM:
 1. Through a local entrypoint
@@ -90,7 +94,8 @@ There are two ways to serve an LLM with InferyLLM:
 
 By default, InferyLLM serves at `0.0.0.0:8080` this is configurable through passing the `--host` and `--port` flags.       
 
-### Serving with a container
+<details>
+  <summary>Serving with a container (suggested)</summary>
 
 Assuming you have pulled the container as shown in the [Installation](#pulling-the-inferyllm-container) section,
 running the server is a simple one-liner. You can also use the container to query the serving CLI `help` for all 
@@ -105,8 +110,10 @@ docker run --rm --runtime=nvidia -e INFERY_LLM_DECI_TOKEN=[DECI TOKEN] deci.jfro
 ```
 
 Notice that a HuggingFace token may be passed as an environment variable (using the docker `-e` flag) or as a CLI parameter
+</details>
 
-### Serving with a local entry point
+<details>
+  <summary>Serving with a local entry point</summary>
 
 Assuming you have installed the `infery-llm` local serving requirements, you may use the InferyLLM CLI as a server entrypoint:
 ```bash
@@ -116,6 +123,7 @@ INFERY_LLM_DECI_TOKEN=[DECI TOKEN] infery-llm serve --model-name Deci/DeciLM-7b 
 # See all serving options
 infery-llm serve --help
 ```
+</details>
 
 ## Generation
 Assuming you have a running server listening at `127.0.0.1:9000`, you may submit generation requests to it like so:
