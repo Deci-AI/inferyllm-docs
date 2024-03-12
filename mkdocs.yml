@@ -1,0 +1,4 @@
+site_name: infery-llm
+docs_dir: .
+nav:
+- Welcome: ./managed-inference.ipynb
