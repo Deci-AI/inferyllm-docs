@@ -1,6 +1,6 @@
 ## Managed Inference
 
-[Go to Api Tokens page (Log in if necessary)](https://console.deci.ai/settings/api-tokens). Copy `Temporary Access Token` (valid for 9 hours):
+[Go to Api Tokens page (Log in if necessary)](https://console.deci.ai/settings/api-tokens). Copy `Temporary Access Token` (valid for 1 week):
 
 ![access_token](./access_token.png)
 
